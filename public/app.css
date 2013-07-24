@@ -1,0 +1,45 @@
+#header {
+	height:296px;
+	width:296px;
+	border: 5px solid;
+	float:left;
+	-moz-box-shadow: 2px 4px 6px rgba(0,0,0,.5);
+	-webkit-box-shadow: 2px 4px 6px rgba(0,0,0,.5);
+	box-shadow: 2px 4px 6px rgba(0,0,0,.5);
+}
+
+#head {
+	font-family: 'Oswald', sans-serif;
+    font-size: 36px;
+    margin:5px;
+    text-shadow: 1px 1px 1px #E8E8E8;
+}
+
+#subhead {
+	font-size:16px;
+	font-family: 'Lora', serif;
+	margin:5px;
+}
+
+#photodiv {
+}
+
+.image {
+	float:left;
+	padding:2px;
+}
+
+.caption {
+	width:306px;
+	height:3em;
+	font-size:.75em;
+	font-family: 'Lora', serif;
+}
+
+.user {
+	font-family: 'Lora', serif;
+}
+
+a:link {color:#A8A8A8;}
+a:visited {color:#707070;}
+a:hover {color:#E8E8E8;}
