@@ -43,3 +43,11 @@
 a:link {color:#A8A8A8;}
 a:visited {color:#707070;}
 a:hover {color:#E8E8E8;}
+
+@media screen and (max-width: 540px) {
+
+	photodiv, .caption {
+		width:100%;
+	}
+
+}
