@@ -41,23 +41,29 @@ function getPhotos(url,client,callback){
 	} else {
 		fullUrl = url;
 	}
-	console.log(fullUrl);
 	request.get(fullUrl, function (error, response, data) {
 		if (!error && response.statusCode == 200) {
 			console.log("We got data");
-			iteratePhotos(data);
-			// Just here in case we need a callback at some point, used in testing mainly
-			if (callback) {
-				callback();
+			dataParse = JSON.parse(data);
+			media = dataParse.data;
+			iteratePhotos(media);
+			
+			next_url = dataParse.pagination.next_url;
+			
+			if (next_url != undefined){
+				console.log("getPhotos callback called")
+				getPhotos(next_url);
+			} else {
+				console.log("Got all the possible photos");
+				io.sockets.emit('done');
 			}
 		};
 	});
 };
 
-function iteratePhotos(data){
+function iteratePhotos(media){
 	console.log("iterate photos called")
-	dataParse = JSON.parse(data);
-	media = dataParse.data;
+	
 	for (var i in media) {
 		photo = media[i];
 		value = havePhoto(photo.id, ids)
@@ -69,11 +75,6 @@ function iteratePhotos(data){
 		} else {
 			console.log(photo.id + " isn't new")
 		}
-	}
-	next_url = dataParse.pagination.next_url;
-	if (next_url == undefined){
-		console.log("Got all the possible photos");
-		io.sockets.emit('done');
 	}
 };
 

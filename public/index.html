@@ -5,67 +5,27 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<link rel="stylesheet" type="text/css" href="app.css">
 		<link href='http://fonts.googleapis.com/css?family=Lora|Oswald' rel='stylesheet' type='text/css'>
-		
-		<script>
-			window.onload = function() {
-				var socket = io.connect(window.location.hostname);
-				
-				socket.on('connect', function(){
-					console.log("Connection made");
-				});
-				
-				socket.on('photos', function (data) {
-					console.log('got some data back');
-					$.each(data,function(){
-						postPhoto(this);
-					});
-				});
-				
-				socket.on('new', function (data) {
-					console.log('got a new photo');
-					postPhoto(data);
-				});
-				
-				socket.on('done', function () {
-					$('#next').remove();
-				});
-				
-				$("#next").click(function(){
-					console.log('asking for new photos')
-					socket.emit('next');
-				});
-				
-				postPhoto = function(data,direction){
-					url = data.images.low_resolution.url;
-					caption = '';
-					if (data.caption !== null) {
-						caption = data.caption.text;
-					}
-					user = data.user.username
-					link = data.link;
-					var photoCode = createPhoto(url, caption, user , link);
-					if (direction){
-						$('#photodiv').prepend(photoCode);
-					} else {
-						$('#photodiv').append(photoCode);
-					}
-				}
-				
-				createPhoto = function(url,caption,user,link){
-					img = '<a href="'+link+'"><img src="'+url+'" /></a>';
-					cap = '<div class="caption">'+caption+'</div>';
-					userCode = '<div class="user">by: <a href="http://instagram.com/'+user+'">'+user+'</a></div>';
-					return '<div class="image">'+img+userCode+cap+'</div>';
-				}
-			}
-			
-		</script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-sanitize.min.js"></script>
+		<script src="photos.js"></script>
 	</head>
-	<body>
+	<body ng-app>
 		<div id="header">
 			<div id="head">What #SalemIs in One Image</div>
 			<div id="subhead">Real-time look at Instagram photos tagged #salemis. Powered by <a href="http://salemis.org/2013/07/salem-in-one-image/">SalemIs, Be and you</a>. Not monitored. Be nice, Salem.</div>
 		</div>
-		<div id="photodiv"></div>
+		
+		<div id="photodiv" ng-controller="Ctrl">
+			
+			<div class="image" ng-repeat="photo in photos|orderBy: '-created_time'">
+				
+				<a href="{{photo.link}}"><img src="{{photo.images.low_resolution.url}}" /></a>
+				<div class="user">by: <a href="http://instagram.com/{{photo.user.username}}">{{photo.user.username}}</a><br/>Posted: {{photo.created_time*1000 | date:'MMMM d, yyyy'}}</div>
+				<div class="caption">{{photo.caption.text}}</div>
+				
+			</div>
+		
+		</div>
+	
 	</body>
 </html>

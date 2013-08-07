@@ -21,17 +21,15 @@
 	margin:5px;
 }
 
-#photodiv {
-}
-
 .image {
 	float:left;
 	padding:2px;
+	width:306px;
 }
 
 .caption {
-	width:306px;
-	height:3em;
+	height:5em;
+	overflow:hidden;
 	font-size:.75em;
 	font-family: 'Lora', serif;
 }
