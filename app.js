@@ -13,6 +13,12 @@ io.configure(function () {
   io.set("polling duration", 10); 
 });
 
+app.get('/hook/instagram', function(req, res){
+	if (req.query.mode == 'subscription'){
+		res.send(req.query.challenge);
+	}
+});
+
 INSTAURL = "https://api.instagram.com/v1/tags/salemis/media/recent?client_id=";
 client = process.env.CLIENT_ID;
 next_url = '';
