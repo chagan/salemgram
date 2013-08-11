@@ -5,6 +5,7 @@ var server = app.listen(process.env.PORT || 5000);
 var io = require('socket.io').listen(server)
 
 app.use(express.static(__dirname + "/public"));
+app.use(express.bodyParser());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
   
@@ -14,9 +15,18 @@ io.configure(function () {
 });
 
 app.get('/hook/instagram', function(req, res){
-	if (req.query.mode == 'subscription'){
+	if (req.query.mode == 'subscribe'){
 		res.send(req.query.challenge);
 	}
+});
+
+app.post('hook/instagram', function(req, res){
+    data = req.body;
+    for (item in data){
+        if (item.object_id == "salemis"){
+            getPhotos(INSTAURL,client);
+        }
+    }
 });
 
 INSTAURL = "https://api.instagram.com/v1/tags/salemis/media/recent?client_id=";
@@ -26,20 +36,14 @@ next_url = '';
 io.sockets.on('connection', function (socket) {
 	console.log('A connection')
 	socket.emit('photos', photos);
-	
-	socket.on('getphotos', function(){
-		getPhotos(INSTAURL,client);
-	});
-	
-	socket.on('next', function(){
-		console.log('getting new photos');
-		getPhotos(next_url);
-	});
 });
 
 photos = new Array();
 ids = new Array();
-getPhotos(INSTAURL,client);
+getPhotos(INSTAURL,client,function(){
+    getNext(next_url);
+});
+
 
 function getPhotos(url,client,callback){	
 	if (client){
@@ -55,17 +59,25 @@ function getPhotos(url,client,callback){
 			iteratePhotos(media);
 			
 			next_url = dataParse.pagination.next_url;
-			
-			if (next_url != undefined){
-				console.log("getPhotos callback called")
-				getPhotos(next_url);
-			} else {
-				console.log("Got all the possible photos");
-				io.sockets.emit('done');
-			}
+            
+            if (callback){
+                callback(next_url);
+            }
 		};
 	});
 };
+
+function getNext(next){
+    if (next != undefined){
+        console.log("getPhotos callback called")
+        getPhotos(next,"",function(next_url){
+            getNext(next_url);
+        });
+    } else {
+        console.log("Got all the possible photos");
+        io.sockets.emit('done');
+    }
+}
 
 function iteratePhotos(media){
 	console.log("iterate photos called")
