@@ -17,7 +17,7 @@ io.configure(function () {
 app.get('/hook/instagram', function(req, res){
     console.log("got a request")
 	if (req.query.hub.mode == 'subscribe'){
-		res.send(req.query.challenge);
+		res.send(req.query.hub.challenge);
 	} else {
         console.log("not a subscription")
         res.send("Not a subscription")
