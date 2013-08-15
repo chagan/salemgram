@@ -15,12 +15,13 @@ io.configure(function () {
 });
 
 app.get('/hook/instagram', function(req, res){
-    console.log("got a request")
+    console.log("got a request");
+    console.log(req.query.hub.mode);
 	if (req.query.hub.mode == 'subscribe'){
 		res.send(req.query.hub.challenge);
 	} else {
         console.log("not a subscription")
-        res.send("Not a subscription")
+        res.send("Not a subscription");
     }
 });
 
