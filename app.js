@@ -25,8 +25,6 @@ app.get('/hook/instagram', function(req, res){
 
 app.post('/hook/instagram', function(req, res){
     data = req.body;
-    console.log("req:");
-    console.log(req);
     console.log("data:");
     console.log(data);
     for (item in data){
