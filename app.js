@@ -30,9 +30,9 @@ app.post('/hook/instagram', function(req, res){
     for (item in data){
     	console.log("item:");
     	console.log(item);
-    	console.log("item.object_id:");
-    	console.log(item.object_id);
-        if (item.object_id == "salemis"){
+    	console.log("data[item].object_id");
+    	console.log(data[item].object_id);
+        if (data[item].object_id == "salemis"){
             getPhotos(INSTAURL,client);
         }
     }
