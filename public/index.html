@@ -10,14 +10,17 @@
 		<script src="photos.js"></script>
 	</head>
 	<body ng-app>
-		<div id="header">
-			<div id="head">What #SalemIs in One Image</div>
-			<div id="subhead">Real-time look at Instagram photos tagged #salemis. Powered by <a href="http://salemis.org/2013/07/salem-in-one-image/">SalemIs, Be and you</a>. Not monitored. Be nice, Salem.</div>
-		</div>
 		
 		<div id="photodiv" ng-controller="Ctrl">
-			
-			<div class="image" ng-repeat="photo in photos|orderBy: '-created_time'">
+		
+			<div id="header">
+				<div id="head">What #SalemIs in One Image</div>
+				<div id="subhead">Real-time look at Instagram photos tagged #salemis. Powered by <a href="http://salemis.org/2013/07/salem-in-one-image/">SalemIs, Be and you</a>. Not monitored. Be nice, Salem.</div>
+				<select ng-model="userselect" ng-options="u for u in users">
+					<option value="">select a user</option>
+				</select>
+			</div>
+			<div class="image" ng-repeat="photo in photos| filter:userSearch(userselect) |orderBy: '-created_time'">
 				
 				<a href="{{photo.link}}"><img src="{{photo.images.low_resolution.url}}" /></a>
 				<div class="user">by: <a href="http://instagram.com/{{photo.user.username}}">{{photo.user.username}}</a><br/>Posted: {{photo.created_time*1000 | date:'MMMM d, yyyy'}}</div>
